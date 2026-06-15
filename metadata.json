@@ -1,0 +1,6 @@
+{
+  "name": "Harini Portfolio",
+  "description": "Professional responsive portfolio website for Sanaboina Naga Komala Harini, B.Tech Software Developer and AI Enthusiast.",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
