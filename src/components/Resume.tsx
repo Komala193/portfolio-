@@ -4,9 +4,45 @@ import { Download, Printer, GraduationCap, Code2, Award, Briefcase, Mail, Phone,
 import { PORTFOLIO_DATA, Internship, Certification } from "../data";
 
 export default function Resume() {
-  const { fullName, role, email, phone, location, github, linkedin, aboutMe } = PORTFOLIO_DATA.personal;
+  const [personal, setPersonal] = useState(() => {
+    const saved = localStorage.getItem("portfolio_personal");
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { console.error(e); }
+    }
+    return PORTFOLIO_DATA.personal;
+  });
+
+  const [skillCategories, setSkillCategories] = useState(() => {
+    const saved = localStorage.getItem("portfolio_skill_categories");
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { console.error(e); }
+    }
+    return PORTFOLIO_DATA.skillCategories;
+  });
+
+  useEffect(() => {
+    const handleSyncP = () => {
+      const saved = localStorage.getItem("portfolio_personal");
+      if (saved) {
+        try { setPersonal(JSON.parse(saved)); } catch (e) {}
+      }
+    };
+    const handleSyncS = () => {
+      const saved = localStorage.getItem("portfolio_skill_categories");
+      if (saved) {
+        try { setSkillCategories(JSON.parse(saved)); } catch (e) {}
+      }
+    };
+    window.addEventListener("portfolio-personal-updated", handleSyncP);
+    window.addEventListener("portfolio-skill-categories-updated", handleSyncS);
+    return () => {
+      window.removeEventListener("portfolio-personal-updated", handleSyncP);
+      window.removeEventListener("portfolio-skill-categories-updated", handleSyncS);
+    };
+  }, []);
+
+  const { fullName, role, email, phone, location, github, linkedin, aboutMe } = personal;
   const education = PORTFOLIO_DATA.education;
-  const skillCategories = PORTFOLIO_DATA.skillCategories;
   const projects = PORTFOLIO_DATA.projects;
 
   const [certifications, setCertifications] = useState<Certification[]>(() => {
@@ -601,11 +637,9 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
   };
 
   const handleDownloadWordFile = () => {
-    const { fullName, role, email, phone, location, github, linkedin, aboutMe } = PORTFOLIO_DATA.personal;
+    const { fullName, role, email, phone, location, github, linkedin, aboutMe } = personal;
     const education = PORTFOLIO_DATA.education;
-    const skillCategories = PORTFOLIO_DATA.skillCategories;
     const projects = PORTFOLIO_DATA.projects;
-    const certifications = PORTFOLIO_DATA.certifications;
 
     const content = `
       <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">

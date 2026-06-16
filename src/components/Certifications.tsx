@@ -247,29 +247,29 @@ export default function Certifications() {
   return (
     <section
       id="certifications"
-      className="py-24 bg-slate-50 dark:bg-slate-950 transition-colors duration-300 relative overflow-hidden"
+      className="py-24 bg-[#F5F7FA] transition-colors duration-300 relative overflow-hidden"
     >
       {/* Visual background lines */}
-      <div className="absolute top-10 right-10 w-96 h-96 rounded-full bg-indigo-500/5 blur-[120px] pointer-events-none" />
+      <div className="absolute top-10 right-10 w-96 h-96 rounded-full bg-blue-500/5 blur-[120px] pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header Controls */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
           <div className="max-w-xl text-center md:text-left">
-            <h2 className="text-sm font-semibold tracking-wider text-slate-500 dark:text-slate-400 uppercase font-mono">
+            <h2 className="text-sm font-semibold tracking-wider text-[#374151] uppercase font-mono">
               04. Credentials
             </h2>
-            <p className="mt-2 text-3xl sm:text-4xl font-sans font-extrabold text-slate-900 dark:text-white tracking-tight">
+            <p className="mt-2 text-3xl sm:text-4xl font-sans font-extrabold text-[#111827] tracking-tight">
               Professional Certifications
             </p>
           </div>
 
-          <div className="flex items-center justify-center gap-2.5 self-center">
+          <div className="flex items-center justify-center gap-2.5 self-center font-sans">
             {hasModifiedList && (
               <button
                 onClick={handleResetDefaults}
                 title="Reset to portfolio defaults"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-slate-100 dark:bg-slate-900 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-350 font-sans text-xs font-bold rounded-xl border border-slate-205 dark:border-slate-800 shadow-xs cursor-pointer transition-all"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-[#F5F7FA] text-[#374151] font-sans text-xs font-bold rounded-xl border border-[#D1D5DB] shadow-xs cursor-pointer transition-all"
               >
                 <RotateCcw size={12} />
                 Reset Defaults
@@ -278,7 +278,7 @@ export default function Certifications() {
 
             <button
               onClick={() => setIsModalOpen(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-sans text-xs font-extrabold rounded-xl shadow-sm cursor-pointer transition-all"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-sans text-xs font-extrabold rounded-xl shadow-sm cursor-pointer transition-all"
             >
               <Plus size={14} />
               Upload Certificate
@@ -288,12 +288,12 @@ export default function Certifications() {
 
         {/* Certifications Card Grid */}
         {certifications.length === 0 ? (
-          <div className="text-center py-16 bg-white dark:bg-slate-900 border border-dashed border-slate-250 dark:border-slate-800 rounded-2xl">
+          <div className="text-center py-16 bg-white border border-dashed border-[#D1D5DB] rounded-2xl">
             <Award size={48} className="mx-auto text-slate-300 mb-3" />
-            <p className="text-slate-500 dark:text-slate-400 text-sm">No certifications are currently displayed.</p>
+            <p className="text-slate-550 text-sm">No certifications are currently displayed.</p>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="mt-4 inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 text-xs font-bold hover:underline cursor-pointer"
+              className="mt-4 inline-flex items-center gap-1.5 text-[#2563EB] text-xs font-bold hover:underline cursor-pointer"
             >
               Upload your first credentials now
             </button>
@@ -305,13 +305,13 @@ export default function Certifications() {
               return (
                 <div
                   key={cert.id}
-                  className="group relative p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-xl shadow-xs hover:shadow-sm hover:border-slate-300 dark:hover:border-slate-700 transition-all duration-300 flex items-start gap-5 overflow-hidden"
+                  className="group relative p-6 bg-white border border-[#D1D5DB] rounded-xl shadow-sm hover:shadow-md hover:border-blue-400 transition-all duration-300 flex items-start gap-5 overflow-hidden"
                 >
                   {/* Certification Emblem Badge */}
-                  <div className="relative shrink-0 p-3 rounded-xl bg-slate-50 dark:bg-slate-850 text-slate-605 dark:text-slate-395 border border-slate-200/40 dark:border-slate-800 transition-colors duration-300">
+                  <div className="relative shrink-0 p-3 rounded-xl bg-[#F5F7FA] text-[#374151] border border-[#D1D5DB] transition-colors duration-300">
                     <Award size={24} />
                     {cert.fileContent && (
-                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center text-white text-[9px] font-bold border border-white dark:border-slate-900" title="Verifiable User Upload">
+                      <span className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full flex items-center justify-center text-white text-[9px] font-bold border border-white" title="Verifiable User Upload">
                         ✓
                       </span>
                     )}
@@ -320,24 +320,24 @@ export default function Certifications() {
                   {/* Main Content Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                      <span className="font-mono text-[9px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest bg-slate-100 dark:bg-slate-800/60 px-2 py-0.5 rounded inline-block">
+                      <span className="font-mono text-[9px] font-bold text-[#374151] uppercase tracking-widest bg-[#F5F7FA] px-2 py-0.5 rounded inline-block border border-[#D1D5DB]">
                         ID: {cert.verificationId}
                       </span>
-                      <span className="font-mono text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+                      <span className="font-mono text-[10px] font-bold text-[#2563EB] uppercase tracking-wider">
                         {cert.date}
                       </span>
                       {cert.fileName && (
-                        <span className="font-mono text-[9px] font-semibold text-emerald-600 bg-emerald-50 dark:bg-emerald-950/20 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30 px-1.5 py-0.5 rounded truncate max-w-[130px]" title={cert.fileName}>
+                        <span className="font-mono text-[9px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded truncate max-w-[130px]" title={cert.fileName}>
                           📎 File
                         </span>
                       )}
                     </div>
 
-                    <h3 className="font-sans font-bold text-slate-900 dark:text-white text-base sm:text-lg tracking-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors leading-snug">
+                    <h3 className="font-sans font-bold text-[#111827] text-base sm:text-lg tracking-tight group-hover:text-[#2563EB] transition-colors leading-snug">
                       {cert.title}
                     </h3>
 
-                    <p className="font-sans font-semibold text-slate-500 dark:text-slate-400 text-sm mt-1 flex items-center gap-1">
+                    <p className="font-sans font-semibold text-[#374151] text-sm mt-1 flex items-center gap-1">
                       <Bookmark size={13} className="shrink-0 text-slate-400" />
                       {cert.organization}
                     </p>
@@ -345,7 +345,7 @@ export default function Certifications() {
                     <div className="mt-4 flex items-center justify-between gap-3 flex-wrap">
                       <button
                         onClick={() => handleDownloadCertificate(cert)}
-                        className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-slate-100 hover:bg-slate-900 dark:bg-slate-800 dark:hover:bg-blue-600 text-slate-700 hover:text-white dark:text-slate-300 dark:hover:text-white font-sans text-xs font-semibold rounded-full shadow-xs transition-all duration-200 cursor-pointer"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#F5F7FA] hover:bg-[#2563EB] text-[#374151] hover:text-white font-sans text-xs font-semibold rounded-full border border-[#D1D5DB] shadow-2xs transition-all duration-200 cursor-pointer"
                       >
                         <Download size={12} />
                         Download Certificate
@@ -354,7 +354,7 @@ export default function Certifications() {
                       {isCustom && (
                         <button
                           onClick={() => handleDeleteCert(cert.id)}
-                          className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-red-500 hover:text-red-700 dark:hover:text-red-400 cursor-pointer transition-colors px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-950/20"
+                          className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-red-500 hover:text-red-700 cursor-pointer transition-colors px-2 py-1 rounded hover:bg-red-50"
                         >
                           <Trash2 size={11} />
                           Remove
@@ -364,7 +364,7 @@ export default function Certifications() {
                   </div>
 
                   {/* Accompanying verification mark */}
-                  <div className="hidden sm:flex self-center text-slate-300 group-hover:text-amber-500 transition-colors duration-300 pr-1">
+                  <div className="hidden sm:flex self-center text-slate-300 group-hover:text-[#2563EB] transition-colors duration-300 pr-1">
                     {cert.fileContent ? <Sparkles size={20} className="text-emerald-400" /> : <ShieldCheck size={20} />}
                   </div>
                 </div>

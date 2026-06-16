@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Sun, Moon, Menu, X, Code2 } from "lucide-react";
+import { Sun, Moon, Menu, X, Code2, Edit3, ChevronDown, Sparkles, Sliders, Award } from "lucide-react";
 import { PORTFOLIO_DATA } from "../data";
 
 interface NavbarProps {
@@ -12,6 +12,31 @@ export default function Navbar({ isDark, onToggleTheme }: NavbarProps) {
   const [activeSection, setActiveSection] = useState("home");
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [editDropdownOpen, setEditDropdownOpen] = useState(false);
+  const editDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close customize dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (editDropdownRef.current && !editDropdownRef.current.contains(event.target as Node)) {
+        setEditDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const triggerCustomizePersonal = () => {
+    setEditDropdownOpen(false);
+    setMenuOpen(false);
+    window.dispatchEvent(new CustomEvent("open-profile-editor"));
+  };
+
+  const triggerCustomizeSkills = () => {
+    setEditDropdownOpen(false);
+    setMenuOpen(false);
+    window.dispatchEvent(new CustomEvent("open-skills-editor"));
+  };
 
   const navItems = [
     { label: "Home", id: "home" },
@@ -26,7 +51,7 @@ export default function Navbar({ isDark, onToggleTheme }: NavbarProps) {
   // Track scrolling to add elevation/shadow
   useEffect(() => {
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      setScrolled(window.scrollY > 25);
 
       // Simple intersection observer behavior manually
       const scrollPosition = window.scrollY + 150;
@@ -68,7 +93,7 @@ export default function Navbar({ isDark, onToggleTheme }: NavbarProps) {
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 no-print ${
         scrolled
-          ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-md shadow-sm border-b border-blue-500/10"
+          ? "bg-white/85 backdrop-blur-md shadow-xs border-b border-slate-200/50"
           : "bg-transparent"
       }`}
     >
@@ -76,10 +101,10 @@ export default function Navbar({ isDark, onToggleTheme }: NavbarProps) {
         <div className="flex items-center justify-between h-16">
           {/* Logo / Name */}
           <div className="flex-shrink-0 flex items-center gap-2.5 cursor-pointer" onClick={() => handleNavClick("home")}>
-            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-sm">
               H
             </div>
-            <span className="font-sans font-bold text-xl tracking-tight text-slate-800 dark:text-slate-100 underline decoration-blue-500 decoration-2 underline-offset-4">
+            <span className="font-sans font-bold text-xl tracking-tight text-slate-850 underline decoration-blue-500 decoration-2 underline-offset-4">
               N.K. Harini
             </span>
           </div>
@@ -93,8 +118,8 @@ export default function Navbar({ isDark, onToggleTheme }: NavbarProps) {
                   onClick={() => handleNavClick(item.id)}
                   className={`relative px-3.5 py-1.5 rounded-full font-sans text-xs sm:text-sm font-semibold transition-all duration-250 cursor-pointer ${
                     activeSection === item.id
-                      ? "bg-slate-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-xs"
-                      : "text-slate-650 dark:text-slate-350 hover:bg-slate-50 dark:hover:bg-slate-850 hover:text-blue-600 dark:hover:text-blue-400"
+                      ? "bg-slate-100 text-blue-600 shadow-xs"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-blue-600"
                   }`}
                 >
                   {item.label}
@@ -102,28 +127,65 @@ export default function Navbar({ isDark, onToggleTheme }: NavbarProps) {
               ))}
             </div>
 
-            {/* Dark Mode Toggle */}
-            <button
-              onClick={onToggleTheme}
-              className="p-2 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 transition-colors"
-              aria-label="Toggle theme"
-            >
-              {isDark ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
+            {/* Customize / Edit Dropdown */}
+            <div className="relative" ref={editDropdownRef}>
+              <button
+                type="button"
+                onClick={() => setEditDropdownOpen(!editDropdownOpen)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold bg-blue-50 hover:bg-blue-100 text-blue-600 border border-blue-100/50 transition-all duration-200 cursor-pointer shadow-xs hover:scale-102"
+              >
+                <Edit3 size={12} />
+                <span>Customize</span>
+                <ChevronDown size={11} className={`transition-transform duration-200 ${editDropdownOpen ? "rotate-180" : ""}`} />
+              </button>
+
+              <AnimatePresence>
+                {editDropdownOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.96 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 mt-2 w-48 bg-white border border-slate-200/80 rounded-xl shadow-lg py-1.5 z-55 text-left"
+                  >
+                    <button
+                      type="button"
+                      onClick={triggerCustomizePersonal}
+                      className="w-full flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors cursor-pointer text-left border-none bg-transparent"
+                    >
+                      <Sparkles size={12} className="text-blue-500 shrink-0" />
+                      <span>Edit Personal Bio</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={triggerCustomizeSkills}
+                      className="w-full flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors cursor-pointer text-left border-none bg-transparent"
+                    >
+                      <Sliders size={12} className="text-blue-500 shrink-0" />
+                      <span>Manage Skills Matrix</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditDropdownOpen(false);
+                        handleNavClick("certifications");
+                      }}
+                      className="w-full flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors cursor-pointer text-left border-none bg-transparent"
+                    >
+                      <Award size={12} className="text-blue-500 shrink-0" />
+                      <span>Upload Certificates</span>
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
 
           {/* Mobile Menu Action Button */}
           <div className="flex md:hidden items-center gap-3">
             <button
-              onClick={onToggleTheme}
-              className="p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-700 dark:text-gray-200 transition-colors"
-              aria-label="Toggle theme"
-            >
-              {isDark ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
-            <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="p-1.5 rounded-lg text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400 hover:bg-black/5 dark:hover:bg-white/5 transition-colors"
+              className="p-1.5 rounded-lg text-slate-600 hover:text-blue-600 hover:bg-black/5 transition-colors"
             >
               {menuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
@@ -138,7 +200,7 @@ export default function Navbar({ isDark, onToggleTheme }: NavbarProps) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-b border-blue-500/10 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md overflow-hidden"
+            className="md:hidden border-b border-slate-200/50 bg-white/95 backdrop-blur-md overflow-hidden"
           >
             <div className="px-4 pt-2 pb-6 space-y-1">
               {navItems.map((item) => (
@@ -147,8 +209,8 @@ export default function Navbar({ isDark, onToggleTheme }: NavbarProps) {
                   onClick={() => handleNavClick(item.id)}
                   className={`block w-full text-left px-4 py-2.5 rounded-lg font-sans text-base font-medium transition-colors ${
                     activeSection === item.id
-                      ? "bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400"
-                      : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-slate-800/50 hover:text-blue-600 dark:hover:text-blue-400"
+                      ? "bg-blue-50 text-blue-600"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-blue-600"
                   }`}
                 >
                   {item.label}

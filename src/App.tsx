@@ -11,38 +11,16 @@ import Footer from "./components/Footer";
 import ButterflyCursor from "./components/ButterflyCursor";
 
 export default function App() {
-  const [isDark, setIsDark] = useState(false);
-
   useEffect(() => {
-    // Detect theme on mount
-    const savedTheme = localStorage.getItem("portfolio_theme");
-    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    
-    if (savedTheme === "dark" || (!savedTheme && systemPrefersDark)) {
-      setIsDark(true);
-      document.documentElement.classList.add("dark");
-    } else {
-      setIsDark(false);
-      document.documentElement.classList.remove("dark");
-    }
+    // Strictly utilize professional light theme
+    document.documentElement.classList.remove("dark");
+    localStorage.setItem("portfolio_theme", "light");
   }, []);
 
-  const handleToggleTheme = () => {
-    const nextDark = !isDark;
-    setIsDark(nextDark);
-    if (nextDark) {
-      document.documentElement.classList.add("dark");
-      localStorage.setItem("portfolio_theme", "dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-      localStorage.setItem("portfolio_theme", "light");
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 transition-colors duration-300 overflow-x-hidden selection:bg-blue-500/20 selection:text-blue-700 dark:selection:text-blue-300">
+    <div className="min-h-screen bg-[#F5F7FA] text-[#111827] transition-colors duration-300 overflow-x-hidden selection:bg-blue-500/20 selection:text-blue-800">
       {/* Navbar segment */}
-      <Navbar isDark={isDark} onToggleTheme={handleToggleTheme} />
+      <Navbar isDark={false} onToggleTheme={() => {}} />
       
       {/* Scroll sections */}
       <main className="transition-all duration-300">

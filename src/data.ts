@@ -18,6 +18,7 @@ export interface Project {
   description: string;
   technologies: string[];
   githubUrl: string;
+  liveUrl?: string;
   category: "Web" | "IoT / Embedded" | "Environment / Social";
 }
 
@@ -53,7 +54,7 @@ export const PORTFOLIO_DATA = {
     location: "Visakhapatnam, Andhra Pradesh, India",
     email: "sanaboinakomalaharini19@gmail.com",
     phone: "+91 93816 74582", // A clean, realistic number representation corresponding to standard AP format
-    github: "https://github.com/komala-harini",
+    github: "https://github.com/Komala193",
     linkedin: "https://linkedin.com/in/sanaboina-naga-komala-harini",
     avatarPath: "/src/assets/images/profile_avatar_1781505216499.jpg",
   },
@@ -108,6 +109,7 @@ export const PORTFOLIO_DATA = {
       description: "A community ecological software platform that enables city councils and local citizens to catalog, organize, and monitor neighborhood plantation drives. Features dynamic interactive trackers, survival rate analyses, and air status index visualizations.",
       technologies: ["React", "Tailwind CSS", "JavaScript", "LocalStorage", "Recharts"],
       githubUrl: "https://github.com/komala-harini/green-plantation-drive",
+      liveUrl: "https://komala-harini.github.io/green-plantation-drive",
       category: "Environment / Social",
     },
     {
@@ -124,6 +126,24 @@ export const PORTFOLIO_DATA = {
       description: "A secure digital portal bridging the communication divide between regional blood banks, volunteer donors, and active critical care patients. Built with fully functional matching queries, contact safety measures, and camp rosters.",
       technologies: ["HTML5 / CSS3", "JavaScript", "MySQL", "NodeJS / Express", "Git"],
       githubUrl: "https://github.com/komala-harini/online-blood-donation",
+      category: "Web",
+    },
+    {
+      id: "proj-4",
+      title: "Starbucks Website Recreation",
+      description: "A sleek, highly interactive and desktop-first recreation of the Starbucks user experience. Features responsive menu navigation sliders, real-time cup customizable order selections, reward membership calculation widgets, and high-fidelity custom animations.",
+      technologies: ["HTML5", "CSS3", "JavaScript", "Vite", "Tailwind CSS"],
+      githubUrl: "https://github.com/komala-harini/starbucks",
+      liveUrl: "https://komala-harini.github.io/starbucks",
+      category: "Web",
+    },
+    {
+      id: "proj-5",
+      title: "GENZ Fashion Store",
+      description: "An expressive and trendsetting e-commerce storefront built for contemporary digital-native fashion shoppers. Incorporates responsive bento layouts, aesthetic-based product filters, sliding interactive shopping-bag drawer operations, and LocalStorage-powered persistent sessions.",
+      technologies: ["React", "TypeScript", "Tailwind CSS", "LocalStorage", "Motion"],
+      githubUrl: "https://github.com/komala-harini/genz-fashion-store",
+      liveUrl: "https://komala-harini.github.io/genz-fashion-store",
       category: "Web",
     }
   ] as Project[],

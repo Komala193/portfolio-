@@ -4,11 +4,41 @@ import { Github, Linkedin, Mail, ArrowDown, Download, FileText, ChevronDown, Cam
 import { PORTFOLIO_DATA } from "../data";
 
 export default function Home() {
-  const { fullName, role, tagline, github, linkedin, email, avatarPath } = PORTFOLIO_DATA.personal;
+  const [personal, setPersonal] = useState(() => {
+    const saved = localStorage.getItem("portfolio_personal");
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { console.error(e); }
+    }
+    return PORTFOLIO_DATA.personal;
+  });
+
+  useEffect(() => {
+    const handleSync = () => {
+      const saved = localStorage.getItem("portfolio_personal");
+      if (saved) {
+        try {
+          setPersonal(JSON.parse(saved));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    };
+    window.addEventListener("portfolio-personal-updated", handleSync);
+    return () => window.removeEventListener("portfolio-personal-updated", handleSync);
+  }, []);
+
+  const { fullName, role, tagline, github, linkedin, email, avatarPath } = personal;
 
   const [avatar, setAvatar] = useState(() => {
     return localStorage.getItem("portfolio_avatar") || avatarPath;
   });
+
+  // Watch avatarPath default changes in case they reset profile data
+  useEffect(() => {
+    if (!localStorage.getItem("portfolio_avatar")) {
+      setAvatar(personal.avatarPath);
+    }
+  }, [personal.avatarPath]);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -133,10 +163,21 @@ export default function Home() {
   };
 
   const handleDownloadWord = () => {
-    const { fullName, role, email, github, linkedin } = PORTFOLIO_DATA.personal;
-    const { phone, location } = PORTFOLIO_DATA.personal;
+    let activePersonal = personal;
+    let activeSkills = PORTFOLIO_DATA.skillCategories;
+    try {
+      const savedP = localStorage.getItem("portfolio_personal");
+      if (savedP) activePersonal = JSON.parse(savedP);
+      const savedS = localStorage.getItem("portfolio_skill_categories");
+      if (savedS) activeSkills = JSON.parse(savedS);
+    } catch (e) {
+      console.error(e);
+    }
+
+    const { fullName, role, email, github, linkedin } = activePersonal;
+    const { phone, location } = activePersonal;
     const education = PORTFOLIO_DATA.education;
-    const skillCategories = PORTFOLIO_DATA.skillCategories;
+    const skillCategories = activeSkills;
     const projects = PORTFOLIO_DATA.projects;
     const certifications = PORTFOLIO_DATA.certifications;
 
@@ -412,12 +453,12 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
   return (
     <section
       id="home"
-      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden bg-slate-50 dark:bg-slate-950 transition-colors duration-300"
+      className="relative min-h-screen flex items-center justify-center pt-24 pb-16 overflow-hidden bg-[#F5F7FA] transition-colors duration-300"
     >
       {/* Abstract Background Accents */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
-        <div className="absolute -top-[20%] -left-[10%] w-[50%] aspect-square rounded-full bg-slate-200/10 dark:bg-slate-900/10 blur-[120px]" />
-        <div className="absolute top-[40%] right-[-10%] w-[45%] aspect-square rounded-full bg-blue-100/10 dark:bg-blue-900/5 blur-[120px]" />
+        <div className="absolute -top-[20%] -left-[10%] w-[50%] aspect-square rounded-full bg-blue-500/5 blur-[120px]" />
+        <div className="absolute top-[40%] right-[-10%] w-[45%] aspect-square rounded-full bg-indigo-500/5 blur-[120px]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
@@ -437,7 +478,7 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
                 window.dispatchEvent(new CustomEvent("focus-internships"));
               }}
               transition={{ duration: 0.5 }}
-              className="inline-flex self-center lg:self-start items-center gap-2 px-4 py-2 rounded-full bg-blue-50/90 border border-blue-200 hover:bg-blue-105 dark:bg-blue-950/40 dark:border-blue-900/40 dark:hover:bg-blue-950/70 text-blue-750 dark:text-blue-300 text-xs font-sans font-bold uppercase tracking-wider cursor-pointer shadow-xs transition-colors"
+              className="inline-flex self-center lg:self-start items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200 hover:bg-blue-100 text-[#2563EB] text-xs font-sans font-bold uppercase tracking-wider cursor-pointer shadow-xs transition-colors"
               title="Click to view & add internships"
             >
               <span>✨ Open to internships & Graduate roles (Active)</span>
@@ -447,10 +488,10 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-4xl sm:text-5xl lg:text-6.5xl font-sans font-extrabold tracking-tight text-slate-800 dark:text-white leading-tight"
+              className="text-4xl sm:text-5xl lg:text-6.5xl font-sans font-extrabold tracking-tight text-[#111827] leading-tight"
             >
               Hi, I am <br />
-              <span className="text-blue-600 dark:text-blue-400">
+              <span className="text-[#2563EB]">
                 {fullName}
               </span>
             </motion.h1>
@@ -459,7 +500,7 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-lg sm:text-xl font-sans text-slate-600 dark:text-slate-300 font-semibold tracking-wide"
+              className="text-lg sm:text-xl font-sans text-[#374151] font-semibold tracking-wide"
             >
               {role}
             </motion.h2>
@@ -468,7 +509,7 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
-              className="text-base sm:text-lg text-slate-500 dark:text-slate-400 max-w-2xl mx-auto lg:mx-0 font-sans leading-relaxed"
+              className="text-base sm:text-lg text-[#374151] max-w-2xl mx-auto lg:mx-0 font-sans leading-relaxed"
             >
               {tagline}
             </motion.p>
@@ -484,7 +525,7 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
               <div className="relative" ref={dropdownRef}>
                 <button
                   onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="flex items-center gap-2 px-6 py-2.5 bg-slate-900 hover:bg-blue-600 active:scale-95 text-white font-sans text-sm font-semibold rounded-full shadow-md transition-all duration-200 cursor-pointer"
+                  className="flex items-center gap-2 px-6 py-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] active:scale-95 text-white font-sans text-sm font-semibold rounded-full shadow-md transition-all duration-200 cursor-pointer"
                   aria-expanded={isDropdownOpen}
                   aria-haspopup="true"
                 >
@@ -494,7 +535,7 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
                 </button>
 
                 {isDropdownOpen && (
-                  <div className="absolute left-1/2 sm:left-0 -translate-x-1/2 sm:translate-x-0 mt-2 w-56 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl py-1.5 z-50">
+                  <div className="absolute left-1/2 sm:left-0 -translate-x-1/2 sm:translate-x-0 mt-2 w-56 rounded-xl bg-white border border-[#D1D5DB] shadow-xl py-1.5 z-50">
                     <button
                       onClick={() => {
                         setIsDropdownOpen(false);
@@ -503,7 +544,7 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
                           window.print();
                         }, 800);
                       }}
-                      className="w-full text-left px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 font-sans text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 transition-colors flex items-center gap-2 cursor-pointer"
+                      className="w-full text-left px-4 py-2.5 hover:bg-slate-50 font-sans text-xs sm:text-sm font-semibold text-[#111827] transition-colors flex items-center gap-2 cursor-pointer"
                     >
                       <span className="w-2.5 h-2.5 rounded-full bg-red-500 shrink-0" />
                       PDF Format (Web Print)
@@ -513,7 +554,7 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
                         setIsDropdownOpen(false);
                         handleDownloadWord();
                       }}
-                      className="w-full text-left px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 font-sans text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 transition-colors flex items-center gap-2 cursor-pointer"
+                      className="w-full text-left px-4 py-2.5 hover:bg-slate-50 font-sans text-xs sm:text-sm font-semibold text-[#111827] transition-colors flex items-center gap-2 cursor-pointer"
                     >
                       <span className="w-2.5 h-2.5 rounded-full bg-blue-500 shrink-0" />
                       Word Document (.doc)
@@ -523,7 +564,7 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
                         setIsDropdownOpen(false);
                         handleDownloadStub();
                       }}
-                      className="w-full text-left px-4 py-2.5 hover:bg-slate-50 dark:hover:bg-slate-800 font-sans text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 transition-colors flex items-center gap-2 cursor-pointer"
+                      className="w-full text-left px-4 py-2.5 hover:bg-slate-50 font-sans text-xs sm:text-sm font-semibold text-[#111827] transition-colors flex items-center gap-2 cursor-pointer"
                     >
                       <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0" />
                       Plain Text Format (.txt)
@@ -534,7 +575,7 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
 
               <button
                 onClick={() => handleScrollToSection("resume")}
-                className="flex items-center gap-2 px-6 py-2.5 bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 active:scale-95 text-slate-800 dark:text-slate-200 font-sans text-sm font-semibold rounded-full shadow-xs transition-all duration-200 cursor-pointer"
+                className="flex items-center gap-2 px-6 py-2.5 bg-white hover:bg-slate-50 border border-[#D1D5DB] active:scale-95 text-[#111827] font-sans text-sm font-semibold rounded-full shadow-xs transition-all duration-200 cursor-pointer"
               >
                 <FileText size={16} />
                 View Full Resume (PDF)
@@ -546,7 +587,7 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
                   href={linkedin}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2.5 rounded-xl bg-slate-100 hover:bg-blue-50 hover:text-blue-600 dark:bg-slate-800 dark:hover:bg-blue-900/40 dark:hover:text-blue-400 text-slate-600 dark:text-slate-300 transition-all duration-200"
+                  className="p-2.5 rounded-xl bg-white border border-[#D1D5DB] hover:border-[#2563EB] hover:text-[#2563EB] text-[#374151] transition-all duration-200"
                   aria-label="LinkedIn Profile"
                 >
                   <Linkedin size={20} />
@@ -555,14 +596,14 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
                   href={github}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 hover:text-slate-900 dark:bg-slate-800 dark:hover:bg-slate-700 dark:hover:text-white text-slate-600 dark:text-slate-300 transition-all duration-200"
+                  className="p-2.5 rounded-xl bg-white border border-[#D1D5DB] hover:border-slate-800 hover:text-[#111827] text-[#374151] transition-all duration-200"
                   aria-label="GitHub Profile"
                 >
                   <Github size={20} />
                 </a>
                 <a
                   href={`mailto:${email}`}
-                  className="p-2.5 rounded-xl bg-slate-100 hover:bg-red-50 hover:text-red-500 dark:bg-slate-800 dark:hover:bg-red-950/40 dark:hover:text-red-400 text-slate-600 dark:text-slate-300 transition-all duration-200"
+                  className="p-2.5 rounded-xl bg-white border border-[#D1D5DB] hover:border-red-500 hover:text-red-500 text-[#374151] transition-all duration-200"
                   aria-label="Send Email"
                 >
                   <Mail size={20} />
@@ -580,8 +621,8 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
               className="relative w-72 h-72 sm:w-85 sm:h-85 lg:w-96 lg:h-96"
             >
               {/* Spinning / Pulsing Tech Circles decorative */}
-              <div className="absolute inset-0 rounded-full border-2 border-dashed border-blue-500/20 dark:border-blue-400/10 animate-[spin_60s_linear_infinite]" />
-              <div className="absolute inset-4 rounded-full border border-indigo-500/10 dark:border-indigo-400/5 animate-[spin_30s_linear_infinite_reverse]" />
+              <div className="absolute inset-0 rounded-full border border-dashed border-[#2563EB]/20 animate-[spin_60s_linear_infinite]" />
+              <div className="absolute inset-4 rounded-full border border-indigo-500/10 animate-[spin_30s_linear_infinite_reverse]" />
               <div className="absolute inset-0 bg-blue-500/5 rounded-full filter blur-xl animate-pulse" />
 
               {/* Float container */}
@@ -596,7 +637,7 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
                 }}
                 className="w-full h-full relative z-10"
               >
-                <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white dark:border-slate-800 bg-slate-100 dark:bg-slate-850 relative group/avatar">
+                <div className="w-full h-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-white relative group/avatar">
                   <img
                     src={avatar}
                     alt={fullName}
@@ -636,14 +677,14 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.5 }}
-                className="absolute -right-4 bottom-12 z-20 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md px-5 py-3.5 rounded-2xl shadow-xl border border-blue-500/10 flex items-center gap-3"
+                className="absolute -right-4 bottom-12 z-20 bg-white/95 px-5 py-3.5 rounded-2xl shadow-xl border border-[#D1D5DB] flex items-center gap-3"
               >
-                <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-sans font-bold text-lg">
+                <div className="w-10 h-10 rounded-xl bg-blue-105 text-[#2563EB] flex items-center justify-center font-sans font-bold text-lg">
                   🎓
                 </div>
                 <div>
-                  <span className="block font-sans font-bold text-slate-800 dark:text-white text-sm leading-tight">Vignan Student</span>
-                  <span className="block font-sans text-xs text-slate-500 dark:text-slate-400">Class of 2027</span>
+                  <span className="block font-sans font-bold text-[#111827] text-sm leading-tight">Vignan Student</span>
+                  <span className="block font-sans text-xs text-[#374151]">Class of 2027</span>
                 </div>
               </motion.div>
 
@@ -652,10 +693,10 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.5, delay: 0.6 }}
-                className="absolute -left-4 top-16 z-20 bg-white/90 dark:bg-slate-800/90 backdrop-blur-md px-4 py-2.5 rounded-2xl shadow-xl border border-blue-500/10 flex items-center gap-2.5"
+                className="absolute -left-4 top-16 z-20 bg-white/95 px-4 py-2.5 rounded-2xl shadow-xl border border-[#D1D5DB] flex items-center gap-2.5"
               >
                 <div className="w-3 h-3 rounded-full bg-emerald-500 animate-ping" />
-                <span className="font-mono text-xs text-slate-700 dark:text-slate-200 font-semibold tracking-tight">Active Tech Stack</span>
+                <span className="font-mono text-xs text-[#111827] font-semibold tracking-tight">Active Tech Stack</span>
               </motion.div>
             </motion.div>
           </div>
@@ -665,7 +706,7 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
         <div className="flex justify-center mt-12 lg:mt-16">
           <button
             onClick={() => handleScrollToSection("about")}
-            className="flex flex-col items-center gap-2 text-slate-400 hover:text-blue-500 transition-colors duration-200 cursor-pointer"
+            className="flex flex-col items-center gap-2 text-slate-400 hover:text-[#2563EB] transition-colors duration-200 cursor-pointer"
           >
             <span className="font-sans text-xs uppercase tracking-widest font-semibold">Explore Portfolio</span>
             <motion.div
@@ -680,17 +721,17 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
 
       {/* Edit Profile Image Modal overlay */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white dark:bg-slate-900 max-w-md w-full rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white max-w-md w-full rounded-2xl shadow-2xl border border-[#D1D5DB] overflow-hidden flex flex-col max-h-[90vh]">
             {/* Header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 dark:border-slate-800">
-              <h3 className="font-sans font-bold text-slate-800 dark:text-white text-base">Update Profile Picture</h3>
+            <div className="flex items-center justify-between px-6 py-4 border-b border-[#D1D5DB]">
+              <h3 className="font-sans font-bold text-[#111827] text-base">Update Profile Picture</h3>
               <button
                 onClick={() => {
                   stopCamera();
                   setIsEditModalOpen(false);
                 }}
-                className="p-1 px-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-850 transition-colors cursor-pointer"
+                className="p-1 px-1.5 rounded-lg text-[#374151] hover:text-red-600 hover:bg-slate-50 transition-colors cursor-pointer"
               >
                 <X size={20} />
               </button>
@@ -699,7 +740,7 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
             {/* Main Area */}
             <div className="p-6 overflow-y-auto space-y-6 flex-1 flex flex-col items-center">
               {/* Image Preview / Video Stream Container */}
-              <div className="relative w-48 h-48 sm:w-56 sm:h-56 rounded-2xl overflow-hidden bg-slate-50 dark:bg-slate-950 border-2 border-slate-200 dark:border-slate-850 flex items-center justify-center shadow-inner">
+              <div className="relative w-48 h-48 sm:w-56 sm:h-56 rounded-2xl overflow-hidden bg-[#F5F7FA] border-2 border-[#D1D5DB] flex items-center justify-center shadow-inner">
                 {useCameraMode ? (
                   <div className="w-full h-full relative">
                     <video
@@ -728,7 +769,7 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
                     />
                     <button
                       onClick={() => setCapturedImage(null)}
-                      className="absolute top-2 right-2 p-1.5 bg-slate-900/60 hover:bg-slate-900/80 rounded-full text-white cursor-pointer transition-colors"
+                      className="absolute top-2 right-2 p-1.5 bg-slate-900/60 hover:bg-slate-900/85 rounded-full text-white cursor-pointer transition-colors"
                       title="Clear photo"
                     >
                       <RefreshCw size={14} />
@@ -736,17 +777,17 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
                   </div>
                 ) : (
                   <div className="text-center p-4 space-y-2">
-                    <div className="w-12 h-12 rounded-full bg-slate-100 dark:bg-slate-900 flex items-center justify-center mx-auto text-slate-400">
+                    <div className="w-12 h-12 rounded-full bg-white border border-[#D1D5DB] flex items-center justify-center mx-auto text-[#374151]">
                       <Camera size={24} />
                     </div>
-                    <p className="font-sans text-xs text-slate-450 dark:text-slate-500">No Image Prepared</p>
+                    <p className="font-sans text-xs text-[#374151]">No Image Prepared</p>
                   </div>
                 )}
               </div>
 
               {/* Status or errors */}
               {errorMsg && (
-                <div className="w-full p-3 bg-red-50 dark:bg-red-950/25 text-red-600 dark:text-red-400 font-sans text-xs rounded-xl border border-red-100/40 dark:border-red-900/30">
+                <div className="w-full p-3 bg-red-50 text-red-600 font-sans text-xs rounded-xl border border-red-200">
                   {errorMsg}
                 </div>
               )}
@@ -761,19 +802,19 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
                       setCapturedImage(null);
                       fileInputRef.current?.click();
                     }}
-                    className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 hover:bg-slate-100 dark:bg-slate-950 dark:hover:bg-slate-850 border border-slate-200/50 dark:border-slate-800 rounded-xl transition-all cursor-pointer group"
+                    className="flex flex-col items-center justify-center gap-2 p-4 bg-white hover:bg-[#F5F7FA] border border-[#D1D5DB] rounded-xl transition-all cursor-pointer group"
                   >
-                    <Upload size={20} className="text-blue-500 group-hover:scale-110 transition-transform" />
-                    <span className="font-sans text-xs font-semibold text-slate-700 dark:text-slate-300">Choose Gallery</span>
+                    <Upload size={20} className="text-[#2563EB] group-hover:scale-110 transition-transform" />
+                    <span className="font-sans text-xs font-semibold text-[#111827]">Choose Gallery</span>
                   </button>
 
                   {/* Camera Snap */}
                   <button
                     onClick={startCamera}
-                    className="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 hover:bg-slate-100 dark:bg-slate-950 dark:hover:bg-slate-850 border border-slate-200/50 dark:border-slate-800 rounded-xl transition-all cursor-pointer group"
+                    className="flex flex-col items-center justify-center gap-2 p-4 bg-white hover:bg-[#F5F7FA] border border-[#D1D5DB] rounded-xl transition-all cursor-pointer group"
                   >
                     <Video size={20} className="text-emerald-500 group-hover:scale-110 transition-transform" />
-                    <span className="font-sans text-xs font-semibold text-slate-700 dark:text-slate-300">Use Camera</span>
+                    <span className="font-sans text-xs font-semibold text-[#111827]">Use Camera</span>
                   </button>
                 </div>
 
@@ -788,10 +829,10 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
             </div>
 
             {/* Footer */}
-            <div className="px-6 py-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between gap-3">
+            <div className="px-6 py-4 bg-[#F5F7FA] border-t border-[#D1D5DB] flex items-center justify-between gap-3">
               <button
                 onClick={resetToDefault}
-                className="inline-flex items-center gap-1.5 px-3 py-2 text-slate-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400 font-sans text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-2 text-[#374151] hover:text-red-605 font-sans text-xs font-semibold rounded-lg transition-colors cursor-pointer"
               >
                 <Trash2 size={13} />
                 Reset Original
@@ -803,14 +844,14 @@ Generated from Sanaboina Naga Komala Harini's Professional Portfolio.
                     stopCamera();
                     setIsEditModalOpen(false);
                   }}
-                  className="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-750 dark:text-slate-300 font-sans text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                  className="px-4 py-2 bg-white border border-[#D1D5DB] hover:bg-slate-50 text-[#111827] font-sans text-xs font-semibold rounded-lg transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={saveImage}
                   disabled={!capturedImage}
-                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-40 disabled:hover:bg-blue-600 text-white font-sans text-xs font-semibold rounded-lg shadow-sm transition-all cursor-pointer flex items-center gap-1"
+                  className="px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-40 disabled:hover:bg-[#2563EB] text-white font-sans text-xs font-semibold rounded-lg shadow-sm transition-all cursor-pointer flex items-center gap-1"
                 >
                   <Check size={14} />
                   Save Photo
