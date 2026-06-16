@@ -24,6 +24,14 @@ export default function Certifications() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+
+  useEffect(() => {
+    const handleOpenEdit = () => {
+      setIsModalOpen(true);
+    };
+    window.addEventListener("open-certificates-editor", handleOpenEdit);
+    return () => window.removeEventListener("open-certificates-editor", handleOpenEdit);
+  }, []);
   
   // Form State
   const [newCert, setNewCert] = useState({

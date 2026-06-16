@@ -18,6 +18,14 @@ export default function Skills() {
 
   const [hoveredCategory, setHoveredCategory] = useState<number | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpenEdit = () => {
+      setIsEditModalOpen(true);
+    };
+    window.addEventListener("open-skills-editor", handleOpenEdit);
+    return () => window.removeEventListener("open-skills-editor", handleOpenEdit);
+  }, []);
   
   // Editor state
   const [editingCategories, setEditingCategories] = useState<SkillCategory[]>([]);

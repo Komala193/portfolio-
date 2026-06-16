@@ -20,6 +20,14 @@ export default function About() {
   const [formData, setFormData] = useState({ ...personal });
 
   useEffect(() => {
+    const handleOpenEdit = () => {
+      setIsEditModalOpen(true);
+    };
+    window.addEventListener("open-profile-editor", handleOpenEdit);
+    return () => window.removeEventListener("open-profile-editor", handleOpenEdit);
+  }, []);
+
+  useEffect(() => {
     const handleSync = () => {
       const saved = localStorage.getItem("portfolio_personal");
       if (saved) {

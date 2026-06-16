@@ -169,6 +169,9 @@ export default function Navbar({ isDark, onToggleTheme }: NavbarProps) {
                       onClick={() => {
                         setEditDropdownOpen(false);
                         handleNavClick("certifications");
+                        setTimeout(() => {
+                          window.dispatchEvent(new CustomEvent("open-certificates-editor"));
+                        }, 100);
                       }}
                       className="w-full flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-blue-600 transition-colors cursor-pointer text-left border-none bg-transparent"
                     >
